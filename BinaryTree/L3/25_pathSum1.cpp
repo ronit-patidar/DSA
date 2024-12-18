@@ -1,12 +1,12 @@
-// leetcode : 145
-// link : https://leetcode.com/problems/binary-tree-postorder-traversal
-// DFS
+// leetcode : 112
+// link : https://leetcode.com/problems/path-sum
 #include<iostream>
-#include<vector>
 #include<queue>
 #include<climits>
+#include<vector>
+#include<cmath>
 using namespace std;
-class TreeNode{ // This is tree node at LEETCODE
+class TreeNode{ 
     public:
     int val;
     TreeNode* left;
@@ -19,16 +19,20 @@ class TreeNode{ // This is tree node at LEETCODE
 };
 class Solution {
 public:
-    void helper(TreeNode* root,vector<int>& ans){
-        if(root==NULL) return ; // base call
-        helper(root->left,ans); // left
-        helper(root->right,ans); // right
-        ans.push_back(root->val); // root
+    void helper(TreeNode* root,int targetSum,bool &flag){
+        if(root==NULL) return;
+        if(root->left==NULL && root->right==NULL){
+           if(root->val==targetSum){
+              flag=true;
+           }
+        }
+        helper(root->left,targetSum-root->val,flag);
+        helper(root->right,targetSum-root->val,flag);
     }
-    vector<int> postorderTraversal(TreeNode* root) {
-        vector<int> ans;
-        helper(root,ans);
-        return ans;
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        bool flag = false;
+        helper(root,targetSum,flag);
+        return flag;
     }
 };
 TreeNode* construct(int arr[],int n){
@@ -59,18 +63,10 @@ TreeNode* construct(int arr[],int n){
     return root;
 }
 int main(){
-  // Tree structure:
-    //             1
-    //           /   \
-    //         2        3
-    //      /   \     /   \
-    //     4     5   6     7    
-    int arr[]={1,2,3,4,5,6,7};
+    int arr[]={5,4,8,11,INT_MIN,13,4,7,2,INT_MIN,INT_MIN,5,1};
     int n=sizeof(arr)/sizeof(arr[0]);
     TreeNode* root=construct(arr,n);
     Solution sol;
-    vector<int> ans = sol.postorderTraversal(root);
-    for(int ele : ans){
-        cout<<ele<<" ";
-    }
+    int targetSum=22;
+    cout<<sol.hasPathSum(root,targetSum);
 }

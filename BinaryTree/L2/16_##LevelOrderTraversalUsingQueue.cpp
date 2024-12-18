@@ -1,10 +1,10 @@
-// leetcode : 145
-// link : https://leetcode.com/problems/binary-tree-postorder-traversal
-// DFS
+// leetcode : 102
+// link : https://leetcode.com/problems/binary-tree-level-order-traversal
 #include<iostream>
-#include<vector>
-#include<queue>
+#include<algorithm>
 #include<climits>
+#include<queue>
+#include<vector>
 using namespace std;
 class TreeNode{ // This is tree node at LEETCODE
     public:
@@ -19,15 +19,24 @@ class TreeNode{ // This is tree node at LEETCODE
 };
 class Solution {
 public:
-    void helper(TreeNode* root,vector<int>& ans){
-        if(root==NULL) return ; // base call
-        helper(root->left,ans); // left
-        helper(root->right,ans); // right
-        ans.push_back(root->val); // root
-    }
-    vector<int> postorderTraversal(TreeNode* root) {
-        vector<int> ans;
-        helper(root,ans);
+    // level order traversal using queue
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        queue<TreeNode*> q;
+        if(!root) return ans;
+        q.push(root);
+        while(q.size()){
+            int n=q.size();
+            vector<int> v;
+            for(int i=0;i<n;i++){
+                TreeNode* temp=q.front();
+                q.pop();
+                v.push_back(temp->val);
+                if(temp->left) q.push(temp->left);
+                if(temp->right) q.push(temp->right);
+            }
+            ans.push_back(v);
+        }
         return ans;
     }
 };
@@ -59,18 +68,15 @@ TreeNode* construct(int arr[],int n){
     return root;
 }
 int main(){
-  // Tree structure:
-    //             1
-    //           /   \
-    //         2        3
-    //      /   \     /   \
-    //     4     5   6     7    
-    int arr[]={1,2,3,4,5,6,7};
+    int arr[]={3,9,20,INT_MIN,INT_MIN,15,7};
     int n=sizeof(arr)/sizeof(arr[0]);
-    TreeNode* root=construct(arr,n);
+    TreeNode* root = construct(arr,n);
     Solution sol;
-    vector<int> ans = sol.postorderTraversal(root);
-    for(int ele : ans){
-        cout<<ele<<" ";
+    vector<vector<int>> ans = sol.levelOrder(root);
+    for(int i=0;i<ans.size();i++){
+         for(int j=0;j<ans[i].size();j++){
+            cout<<ans[i][j]<<" ";
+         }
+         cout<<endl;
     }
 }

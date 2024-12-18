@@ -1,12 +1,12 @@
-// leetcode : 145
-// link : https://leetcode.com/problems/binary-tree-postorder-traversal
-// DFS
+// leetcode : 113
+// link : https://leetcode.com/problems/path-sum-ii
 #include<iostream>
-#include<vector>
 #include<queue>
 #include<climits>
+#include<vector>
+#include<cmath>
 using namespace std;
-class TreeNode{ // This is tree node at LEETCODE
+class TreeNode{ 
     public:
     int val;
     TreeNode* left;
@@ -19,18 +19,28 @@ class TreeNode{ // This is tree node at LEETCODE
 };
 class Solution {
 public:
-    void helper(TreeNode* root,vector<int>& ans){
-        if(root==NULL) return ; // base call
-        helper(root->left,ans); // left
-        helper(root->right,ans); // right
-        ans.push_back(root->val); // root
+    void helper(TreeNode* root, int targetSum, vector<int> v, vector<vector<int>> &ans) {
+        if (root == NULL) return;
+
+        v.push_back(root->val);
+
+        if (root->left == NULL && root->right == NULL) {
+            if (targetSum == root->val) ans.push_back(v);
+            return;
+        }
+
+        helper(root->left, targetSum - root->val, v, ans);
+        helper(root->right, targetSum - root->val, v, ans);
     }
-    vector<int> postorderTraversal(TreeNode* root) {
-        vector<int> ans;
-        helper(root,ans);
+
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> ans;
+        vector<int> v;
+        helper(root, targetSum, v, ans);
         return ans;
     }
 };
+
 TreeNode* construct(int arr[],int n){
     queue<TreeNode*> q;
     TreeNode* root = new TreeNode(arr[0]);
@@ -59,18 +69,16 @@ TreeNode* construct(int arr[],int n){
     return root;
 }
 int main(){
-  // Tree structure:
-    //             1
-    //           /   \
-    //         2        3
-    //      /   \     /   \
-    //     4     5   6     7    
-    int arr[]={1,2,3,4,5,6,7};
+    int arr[]={5,4,8,11,INT_MIN,13,4,7,2,INT_MIN,INT_MIN,5,1};
     int n=sizeof(arr)/sizeof(arr[0]);
     TreeNode* root=construct(arr,n);
     Solution sol;
-    vector<int> ans = sol.postorderTraversal(root);
-    for(int ele : ans){
-        cout<<ele<<" ";
+    int targetSum=22;
+    vector<vector<int>> ans=sol.pathSum(root,targetSum);
+    for(int i=0;i<ans.size();i++){
+        for(int j=0;j<ans[i].size();j++){
+            cout<<ans[i][j]<<" ";
+        }
+        cout<<endl;
     }
 }

@@ -1,5 +1,5 @@
-// leetcode : 102
-// link : https://leetcode.com/problems/binary-tree-level-order-traversal
+// leetcode : 103
+// link : https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal
 // O(n2)
 // O(n+h)
 #include<iostream>
@@ -19,7 +19,7 @@ class TreeNode{ // This is treenode at LEETCODE
     }
 };
 class Solution {
-public:   
+public:
     int levels(TreeNode* root){
         if(root==NULL) return 0;
         return 1 + max(levels(root->left),levels(root->right));
@@ -28,21 +28,33 @@ public:
         if(root==NULL) return ; 
         if(curr==level){
             v.push_back(root->val);
-            return ;    
+            return ; 
         }
-        nthLevel(root->left,curr+1,level,v);  
-        nthLevel(root->right,curr+1,level,v); 
+        nthLevel(root->left,curr+1,level,v); // left
+        nthLevel(root->right,curr+1,level,v); // right
+    }
+    void nthLevel2(TreeNode* root,int curr,int level,vector<int>& v){ 
+        if(root==NULL) return ; 
+        if(curr==level){
+            v.push_back(root->val);
+            return ; 
+        }
+        nthLevel2(root->right,curr+1,level,v); // right
+        nthLevel2(root->left,curr+1,level,v); // left
     }
     void lOrder(TreeNode* root,vector<vector<int>>& ans){// tc and sc
         int n = levels(root);
         for(int i=1;i<=n;i++){
             vector<int> v;
-            nthLevel(root,1,i,v);
+            if(i%2==0){
+                nthLevel2(root,1,i,v);
+            }
+            else nthLevel(root,1,i,v);
             ans.push_back(v);
             cout<<endl;
         }
-    }
-    vector<vector<int>> levelOrder(TreeNode* root) {
+    }    
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
         vector<vector<int>> ans;
         lOrder(root,ans);
         return ans;
@@ -77,16 +89,16 @@ TreeNode* construct(int arr[],int n){
 }
 int main(){
   // Tree structure:
-    //             1
-    //           /   \
-    //         2        3
-    //      /   \     /   \
-    //     4     5   6     7    
+    //               1
+    //           /        \
+    //         2            3
+    //      /   \         /   \
+    //     4     5       6     7 
     int arr[]={1,2,3,4,5,6,7};
     int n=sizeof(arr)/sizeof(arr[0]);
     TreeNode* root=construct(arr,n);
     Solution sol;
-    vector<vector<int>> ans=sol.levelOrder(root);
+    vector<vector<int>> ans=sol.zigzagLevelOrder(root);
     for(int i=0;i<ans.size();i++){
         for(int j=0;j<ans[i].size();j++){
             cout<<ans[i][j]<<" ";

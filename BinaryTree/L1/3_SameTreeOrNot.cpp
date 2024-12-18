@@ -1,6 +1,7 @@
 // leetcode : 100
 // link : https://leetcode.com/problems/same-tree
 #include<iostream>
+#include<queue>
 #include<climits>
 #include<algorithm>
 #include<cmath>
@@ -41,6 +42,40 @@ public:
         return true;
     }
 };
-int main(){
+TreeNode* construct(int arr[],int n){
+    queue<TreeNode*> q;
+    TreeNode* root = new TreeNode(arr[0]);
+    q.push(root);
+    int i=1;
+    int j=2;
+    while(q.size()>0 && i<n){
+        TreeNode* temp = q.front();
+        q.pop();
+        TreeNode* l;
+        TreeNode* r;
+        if(arr[i]!=INT_MIN) l=new TreeNode(arr[i]);
+        else l=NULL;
+        if(j!=n && arr[j]!=INT_MIN) r=new TreeNode(arr[j]);
+        else r=NULL;
 
+        temp->left=l;
+        temp->right=r;
+
+        if(l!=NULL) q.push(l);
+        if(r!=NULL) q.push(r);
+
+        i += 2;
+        j += 2;
+    }
+    return root;
+}
+int main(){
+    int arr[]={1,2,3};
+    int brr[]={1,2,3};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int m=sizeof(brr)/sizeof(brr[0]);
+    TreeNode* p = construct(arr,n);
+    TreeNode* q = construct(brr,m);
+    Solution sol;
+    cout<<sol.isSameTree(p,q)<<endl; 
 }
